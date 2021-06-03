@@ -1,0 +1,30 @@
+version: "2.1"
+services:
+  jobmanager:
+    image: flink:1.2.1-scala_2.10
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    volumes:
+      - D:\data-anomaly-dropped.csv:/opt/flink/data-anomaly-dropped.csv
+      - D:\Ders\Bitirme\ml\target\ml-1.0-SNAPSHOT.jar:/opt/flink/ml.jar
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+
+  taskmanager:
+    image: flink:1.2.1-scala_2.10
+    expose:
+      - "6121"
+      - "6122"
+    volumes:
+      - D:\data-anomaly-dropped.csv:/opt/flink/data-anomaly-dropped.csv
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - "jobmanager:jobmanager"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=1

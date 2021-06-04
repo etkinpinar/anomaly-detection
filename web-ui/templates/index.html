@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Anomaly Detection UI</title>
+
+    <style>
+        #main{
+            width: 500px;
+            margin: auto;
+        }
+
+        form, #result-body{
+            font-size: 1.3rem;
+        }
+
+        #result-body{
+            text-align: center;
+        }
+
+        .select{
+            width: 500px;
+        }
+
+        .select-label{
+            width: 160px;
+        }
+
+        .select-list{
+            width: 400px;
+        }
+
+
+        .card{
+            width: 80%;
+            margin: auto;
+            margin-top: 50px;
+            max-width: 800px;
+        }
+
+        .title{
+            text-align: center;
+        }
+    </style>
+
+    <nav class="navbar navbar-light bg-light">
+        <span style="font-size: 1.5rem;" class="navbar-brand mb-0 h1">Anomaly Detection UI</span>
+    </nav>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+
+
+    <div id="options-card" class="card">
+        <div class="card-header">Options</div>
+
+        <div class="card-body">
+            <form id="form" action="/train" method="post">
+                <div class="select-div">
+                    <label class="select-label">Framework</label>
+                    <select name="framework" class="select-list">
+                        <option value="spark">Apache Spark</option>
+                        <option value="flink">Apache Flink</option>
+                    </select>
+                </div>
+
+                <div class="select-div">
+                    <label class="select-label">Algorithm</label>
+                    <select name="algorithm" class="select-list">
+                        <option value="svm">Support Vector Machine</option>
+                        <option value="dt">Decision Tree Classifier</option>
+                        <option value="rf">Random Forest Classifier</option>
+                        <option value="nb">Naive Bayes Classifier</option>
+                        <option value="lr">Logic Regression Classifier</option>
+                    </select>
+                </div>
+
+                <div class="select-div">
+                    <label class="select-label">Input File</label>
+                    <input type="file" class="select-list" name="input-file" accept=".csv">
+                </div>
+
+                <div class="select-div">
+                    <label class="select-label">Train Ratio (<span id="ratio">0.8</span>)</label>
+                    <input name="ratio" type="range" min="0" max="100" value="80" class="select-list" id="ratio-slider">
+                </div>
+
+
+                <div class="select-div">
+                    <label class="select-label">Multi Node</label>
+                    <input name="multi-node" style="transform: scale(1.5);" type="checkbox" value="1">
+                    <button type="submit" id="submit-but" style="float:right" class="btn btn-primary">Submit</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="result-card" class="card">
+        <div class="card-header">Results</div>
+
+        <div id="result-body" class="card-body">
+
+
+            <div id="spinner" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+
+        var slider = document.getElementById("ratio-slider");
+        var ratio = document.getElementById("ratio");
+        var submit_but = document.getElementById("submit-but")
+        var spinner = document.getElementById("spinner");
+        var result_card = document.getElementById("result-card");
+        var result_body = document.getElementById("result-body");
+
+        if("{{accuracy}}" === ""){
+            console.log("gelmedi");
+            result_card.style.visibility = "hidden";
+        }
+        else{
+            string = "Accuracy: {{accuracy}} <br>" +
+                     "F1 Score: {{f1_score}} <br>" +
+                     "Presicion: {{precision}} <br>" +
+                     "Sensitivity: {{sensitivity}} <br>" +
+                     "Time: {{time}} ms";
+
+            result_body.innerHTML = string;
+        }
+
+        slider.oninput = function() {
+            ratio.innerHTML = this.value/100;
+        }
+
+        submit_but.onclick = function() {
+            result_card.style.visibility = "visible";
+        }
+    </script>
+
+
+</body>
+
+</html>

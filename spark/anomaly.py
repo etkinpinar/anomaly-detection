@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--input', help='Input csv file', default= None)
     parser.add_argument('--algorithm', help='Choice of algorithm -> SVM - DT (Decision Tree) - NB (Naive Bayes) - RF (Random Forest) - LR (Logistic Regression) | Default: SVM', default= "svm")
+    parser.add_argument('--ratio', help='Train ratio | Default: 0.8', default= 0.8)
 
     args = parser.parse_args()
 
@@ -39,14 +40,14 @@ if __name__ == "__main__":
         data = data.drop(col)
     
     # train-test data split
-    trainRatio = 0.8
+    trainRatio = float(args.ratio)
     trainingData, testData = data.randomSplit([trainRatio, 1-trainRatio])
 
     algorithm_choice = args.algorithm
     
     t0 = time.time() 
     if algorithm_choice.lower() == "svm":
-        svm = LinearSVC(regParam=0.1, threshold=0.1)   
+        svm = LinearSVC(maxIter=100, regParam=0.001, threshold=0.7)   
         model = svm.fit(trainingData)
 
     elif algorithm_choice.lower() == "dt":

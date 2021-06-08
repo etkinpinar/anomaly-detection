@@ -9,7 +9,7 @@ services:
       - "8081:8081"
     volumes:
       - ../data-anomaly-dropped.csv:/opt/flink/data-anomaly-dropped.csv
-      - ./target/anomaly-1.0.jar:/opt/flink/anomaly.jar
+      - ./anomaly.jar:/opt/flink/anomaly.jar
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager

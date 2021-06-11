@@ -75,7 +75,7 @@ if __name__ == "__main__":
     # prediction phase
     testT0 = time.time() 
     predictions = model.transform(testData)
-    testTime = (time.time() - trainT0) * 1000 
+    testTime = (time.time() - testT0) * 1000 
     
     # get result metrics
     acc = MulticlassClassificationEvaluator(metricName="accuracy").evaluate(predictions)
@@ -88,8 +88,8 @@ if __name__ == "__main__":
     print("{:.6f}".format(f1), end='<->')
     print("{:.6f}".format(prec), end='<->')
     print("{:.6f}".format(sens), end='<->')
-    print("{:.3f}".format(trainTime), end='<->')
-    print("{:.3f}".format(testTime), end='<->')
+    print("<->{:.3f}".format(trainTime), end='<->')
+    print("<->{:.3f}".format(testTime), end='<->')
 
     spark.stop()
 

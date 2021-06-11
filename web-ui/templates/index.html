@@ -14,7 +14,7 @@
             font-size: 1.3rem;
         }
 
-        #result-body{
+        .result-body{
             text-align: center;
         }
 
@@ -31,7 +31,7 @@
         }
 
 
-        .card{
+        .card-div{
             width: 80%;
             margin: auto;
             margin-top: 50px;
@@ -52,62 +52,77 @@
 
 <body>
 
+    <div class="card-div">
+        <div id="options-card" class="card">
+            <div class="card-header">Options</div>
+
+            <div class="card-body">
+                <form id="form" action="/train" method="post">
+                    <div class="select-div">
+                        <label class="select-label">Framework</label>
+                        <select name="framework" class="select-list">
+                            <option value="spark">Apache Spark</option>
+                            <option value="flink">Apache Flink</option>
+                        </select>
+                    </div>
+
+                    <div class="select-div">
+                        <label class="select-label">Algorithm</label>
+                        <select name="algorithm" class="select-list">
+                            <option value="svm">Support Vector Machine</option>
+                            <option value="dt">Decision Tree Classifier</option>
+                            <option value="rf">Random Forest Classifier</option>
+                            <option value="nb">Naive Bayes Classifier</option>
+                            <option value="lr">Logic Regression Classifier</option>
+                        </select>
+                    </div>
+
+                    <div class="select-div">
+                        <label class="select-label">Input File</label>
+                        <input type="file" class="select-list" name="input-file" accept=".csv">
+                    </div>
+
+                    <div class="select-div">
+                        <label class="select-label">Train Ratio (<span id="ratio">0.8</span>)</label>
+                        <input name="ratio" type="range" min="0" max="100" value="80" class="select-list" id="ratio-slider">
+                    </div>
 
 
-    <div id="options-card" class="card">
-        <div class="card-header">Options</div>
+                    <div class="select-div">
+                        <label class="select-label">Multi Node</label>
+                        <input name="multi-node" style="transform: scale(1.5);" type="checkbox" value="1">
+                        <button type="submit" id="submit-but" style="float:right" class="btn btn-primary">Submit</button>
+                    </div>
 
-        <div class="card-body">
-            <form id="form" action="/train" method="post">
-                <div class="select-div">
-                    <label class="select-label">Framework</label>
-                    <select name="framework" class="select-list">
-                        <option value="spark">Apache Spark</option>
-                        <option value="flink">Apache Flink</option>
-                    </select>
-                </div>
-
-                <div class="select-div">
-                    <label class="select-label">Algorithm</label>
-                    <select name="algorithm" class="select-list">
-                        <option value="svm">Support Vector Machine</option>
-                        <option value="dt">Decision Tree Classifier</option>
-                        <option value="rf">Random Forest Classifier</option>
-                        <option value="nb">Naive Bayes Classifier</option>
-                        <option value="lr">Logic Regression Classifier</option>
-                    </select>
-                </div>
-
-                <div class="select-div">
-                    <label class="select-label">Input File</label>
-                    <input type="file" class="select-list" name="input-file" accept=".csv">
-                </div>
-
-                <div class="select-div">
-                    <label class="select-label">Train Ratio (<span id="ratio">0.8</span>)</label>
-                    <input name="ratio" type="range" min="0" max="100" value="80" class="select-list" id="ratio-slider">
-                </div>
-
-
-                <div class="select-div">
-                    <label class="select-label">Multi Node</label>
-                    <input name="multi-node" style="transform: scale(1.5);" type="checkbox" value="1">
-                    <button type="submit" id="submit-but" style="float:right" class="btn btn-primary">Submit</button>
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div id="result-card" class="card">
-        <div class="card-header">Results</div>
-
-        <div id="result-body" class="card-body">
-
-
-            <div id="spinner" class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+    <div id="result-card" class="card-div">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-header">Performance Results</div>
+              <div class="result-body" class="card-body">
+                <p id="per-results" class="card-text"></p>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-header">Scalability Results</div>
+              <div class="result-body" class="card-body">
+                <p id="sca-results" class="card-text"></p>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
 
@@ -116,27 +131,29 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script>
-
         var slider = document.getElementById("ratio-slider");
         var ratio = document.getElementById("ratio");
         var submit_but = document.getElementById("submit-but")
         var spinner = document.getElementById("spinner");
         var result_card = document.getElementById("result-card");
-        var result_body = document.getElementById("result-body");
+        var sca_results = document.getElementById("sca-results");
+        var per_results = document.getElementById("per-results");
 
         if("{{accuracy}}" === ""){
             console.log("gelmedi");
             result_card.style.visibility = "hidden";
         }
         else{
-            string = "Accuracy: {{accuracy}} <br>" +
+            per_string = "Accuracy: {{accuracy}} <br>" +
                      "F1 Score: {{f1_score}} <br>" +
-                     "Presicion: {{precision}} <br>" +
-                     "Sensitivity: {{sensitivity}} <br>" +
-                     "Train Time: {{trainTime}} ms <br>" +
+                     "Precision: {{precision}} <br>" +
+                     "Sensitivity: {{sensitivity}} <br>";
+
+            sca_string = "Train Time: {{trainTime}} ms <br>" +
                      "Test Time: {{testTime}} ms";
 
-            result_body.innerHTML = string;
+            per_results.innerHTML = per_string;
+            sca_results.innerHTML = sca_string;
         }
 
         slider.oninput = function() {
@@ -147,8 +164,6 @@
             result_card.style.visibility = "visible";
         }
     </script>
-
-
 </body>
 
 </html>

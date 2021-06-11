@@ -26,8 +26,6 @@ import org.apache.flink.ml.math.DenseVector
 import org.apache.flink.ml.preprocessing.Splitter
 import org.apache.flink.ml.preprocessing.Splitter.TrainTestDataSet
 
-import java.util.concurrent.TimeUnit
-
 object Main {
   def createConfMtx( evaluationPairs: DataSet[(Double, Double)]): Array[Int] = {
     var conf_mtx = Array(0,0,0,0)
@@ -106,8 +104,13 @@ object Main {
       .setStepsize(0.1)
       .setThreshold(0.7)
 
+    val trainT0 = System.nanoTime
     svm.fit(dataTrainTest.training)
+    val trainTime: DataSet[String] = env.fromElements("<->" + ((System.nanoTime - trainT0) / 1e6d).toString + "<->")
+
+    val evalT0 = System.nanoTime
     val evaluation = svm.evaluate(dataTrainTest.testing.map(x => (x.vector, x.label)))
+    val evalTime: DataSet[String] = env.fromElements("<->" + ((System.nanoTime - evalT0) / 1e6d).toString + "<->")
 
     var sampleSize = 0
     val conf_mtx = createConfMtx(evaluation)
@@ -124,7 +127,9 @@ object Main {
     print("<->" + (conf_mtx(0) + conf_mtx(3)) / sampleSize.toFloat)
     print("<->" + 2*conf_mtx(0) / (2*conf_mtx(0) + conf_mtx(1) + conf_mtx(2)).toFloat)
     print("<->" + conf_mtx(0) / (conf_mtx(0) + conf_mtx(1)).toFloat)
-    print("<->" + conf_mtx(0) / (conf_mtx(0) + conf_mtx(2)).toFloat)
-    print("<->" + env.getLastJobExecutionResult.getNetRuntime(TimeUnit.MILLISECONDS) + "<->")
+    print("<->" + conf_mtx(0) / (conf_mtx(0) + conf_mtx(2)).toFloat + "<->")
+    //print("<->" + env.getLastJobExecutionResult.getNetRuntime(TimeUnit.MILLISECONDS) + "<->")
+    trainTime.print()
+    evalTime.print()
   }
 }

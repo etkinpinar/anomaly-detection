@@ -96,11 +96,6 @@ under the License.
 			<artifactId>flink-ml_2.10</artifactId>
 			<version>1.2.0</version>
 		</dependency>
-		<dependency>
-			<groupId>ai.cookie</groupId>
-			<artifactId>flink-tensorflow_2.11</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
 		
 		<!-- explicitly add a standard loggin framework, as Flink does not (in the future) have
 			a hard dependency on one specific framework by default -->
@@ -177,7 +172,7 @@ under the License.
 								</goals>
 								<configuration>
 									<artifactSet>
-										<excludes combine.self="override"></excludes>
+										<excludes combine.self="override"/>
 									</artifactSet>
 								</configuration>
 							</execution>
@@ -208,6 +203,7 @@ under the License.
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<finalName>anomaly</finalName>
 							<artifactSet>
 								<excludes>
 									<!-- This list contains all dependencies of flink-dist

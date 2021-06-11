@@ -53,16 +53,15 @@ def predict():
         stream = os.popen(command)
         output = stream.read()
         splitted = output.split('<->')
-        print(splitted)
-
-        results.append(splitted[1:-1])
+        
 
         return render_template("index.html",
                                 accuracy=splitted[1],
                                 f1_score=splitted[2],
                                 precision=splitted[3],
                                 sensitivity=splitted[4],
-                                time=splitted[5])
+                                trainTime=splitted[6],
+                                testTime=splitted[8])
 
 app.run()
 

@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     algorithm_choice = args.algorithm
     
-    t0 = time.time() 
+    trainT0 = time.time() 
     if algorithm_choice.lower() == "svm":
         svm = LinearSVC(maxIter=100, regParam=0.001, threshold=0.7)   
         model = svm.fit(trainingData)
@@ -70,10 +70,12 @@ if __name__ == "__main__":
     else:
         print("Choice of algorithm is not valid. Program shutting down..")
         exit(-1)   
-    timePassed = (time.time() - t0) * 1000 
+    trainTime = (time.time() - trainT0) * 1000 
 
     # prediction phase
+    testT0 = time.time() 
     predictions = model.transform(testData)
+    testTime = (time.time() - trainT0) * 1000 
     
     # get result metrics
     acc = MulticlassClassificationEvaluator(metricName="accuracy").evaluate(predictions)
@@ -86,7 +88,8 @@ if __name__ == "__main__":
     print("{:.6f}".format(f1), end='<->')
     print("{:.6f}".format(prec), end='<->')
     print("{:.6f}".format(sens), end='<->')
-    print("{:.3f}".format(timePassed), end='<->')
+    print("{:.3f}".format(trainTime), end='<->')
+    print("{:.3f}".format(testTime), end='<->')
 
     spark.stop()
 

@@ -9,17 +9,21 @@ sio = socketio.Server()
 
 result_string = "lololo"
 
+
 @app.route('/')
 def post_result():
     return render_template("index.html")
+
 
 @sio.event
 def connect():
     print("I'm connected!")
 
+
 @sio.event
 def connect_error(data):
     print("The connection failed!")
+
 
 @app.route('/train', methods=['POST', 'GET'])
 def predict():
@@ -28,7 +32,7 @@ def predict():
         framework = request.form.get("framework")
         algorithm = request.form.get("algorithm")
         multi_node = request.form.get("multi-node")
-        ratio = float(request.form.get("ratio"))/100
+        ratio = float(request.form.get("ratio")) / 100
         input_file = request.form.get('input-file')
 
         if multi_node != 1:
@@ -53,15 +57,15 @@ def predict():
         stream = os.popen(command)
         output = stream.read()
         splitted = output.split('<->')
-        
 
         return render_template("index.html",
-                                accuracy=splitted[1],
-                                f1_score=splitted[2],
-                                precision=splitted[3],
-                                sensitivity=splitted[4],
-                                trainTime=splitted[6],
-                                testTime=splitted[8])
+                               accuracy=splitted[1],
+                               f1_score=splitted[2],
+                               precision=splitted[3],
+                               sensitivity=splitted[4],
+                               trainTime=splitted[6],
+                               testTime=splitted[8])
+
 
 app.run()
 

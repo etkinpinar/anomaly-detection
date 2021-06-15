@@ -38,6 +38,10 @@
             max-width: 800px;
         }
 
+        .card-text{
+            font-size: "large";
+        }
+
         .title{
             text-align: center;
         }
@@ -106,7 +110,7 @@
               <div class="card-header">Performance Results</div>
               <div class="result-body" class="card-body">
                 <p id="per-results" class="card-text"></p>
-                <div class="spinner-border" role="status">
+                <div id="spinner1" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
               </div>
@@ -117,7 +121,7 @@
               <div class="card-header">Scalability Results</div>
               <div class="result-body" class="card-body">
                 <p id="sca-results" class="card-text"></p>
-                <div class="spinner-border" role="status">
+                <div id="spinner2" class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
               </div>
@@ -134,7 +138,8 @@
         var slider = document.getElementById("ratio-slider");
         var ratio = document.getElementById("ratio");
         var submit_but = document.getElementById("submit-but")
-        var spinner = document.getElementById("spinner");
+        var spinner1 = document.getElementById("spinner1");
+        var spinner2 = document.getElementById("spinner2");
         var result_card = document.getElementById("result-card");
         var sca_results = document.getElementById("sca-results");
         var per_results = document.getElementById("per-results");
@@ -144,16 +149,19 @@
             result_card.style.visibility = "hidden";
         }
         else{
-            per_string = "Accuracy: {{accuracy}} <br>" +
-                     "F1 Score: {{f1_score}} <br>" +
-                     "Precision: {{precision}} <br>" +
-                     "Sensitivity: {{sensitivity}} <br>";
+            spinner1.style.visibility = "hidden";
+            spinner2.style.visibility = "hidden";
 
-            sca_string = "Train Time: {{trainTime}} ms <br>" +
+            per_string = "\nAccuracy: {{accuracy}}\n" +
+                     "F1 Score: {{f1_score}}\n" +
+                     "Precision: {{precision}}\n" +
+                     "Sensitivity: {{sensitivity}}\n";
+
+            sca_string = "\nTrain Time: {{trainTime}} ms\n" +
                      "Test Time: {{testTime}} ms";
 
-            per_results.innerHTML = per_string;
-            sca_results.innerHTML = sca_string;
+            per_results.innerText = per_string;
+            sca_results.innerText = sca_string;
         }
 
         slider.oninput = function() {
@@ -162,6 +170,11 @@
 
         submit_but.onclick = function() {
             result_card.style.visibility = "visible";
+            spinner1.style.visibility = "visible";
+            spinner2.style.visibility = "visible";
+
+            sca_results.innerText = "";
+            per_results.innerText = "";
         }
     </script>
 </body>

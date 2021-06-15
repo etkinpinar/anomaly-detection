@@ -12,7 +12,7 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     volumes:
-      - ../data-anomaly-dropped.csv:/opt/bitnami/spark/data-anomaly-dropped.csv
+      - ../data.csv:/opt/bitnami/spark/data.csv
       - ./anomaly.py:/opt/bitnami/spark/anomaly.py
     ports:
       - '8080:8080'
@@ -29,7 +29,7 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     volumes:
-      - ../data-anomaly-dropped.csv:/opt/bitnami/spark/data-anomaly-dropped.csv
+      - ../data.csv:/opt/bitnami/spark/data.csv
   spark-worker-2:
     image: docker.io/bitnami/spark:3
     container_name: workernode2
@@ -43,4 +43,4 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     volumes:
-      - ../data-anomaly-dropped.csv:/opt/bitnami/spark/data-anomaly-dropped.csv
+      - ../data.csv:/opt/bitnami/spark/data.csv

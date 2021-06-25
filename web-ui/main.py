@@ -1,13 +1,9 @@
 from flask import Flask, render_template, request
-import socketio
 import os
 
 results = []
 
 app = Flask(__name__)
-sio = socketio.Server()
-
-result_string = "lololo"
 
 
 @app.route('/')

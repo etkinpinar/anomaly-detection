@@ -20,6 +20,12 @@ cd spark
 docker-compose up -d
 ```
 
+Installing numpy into masternode via pip
+
+```
+docker exec masternode pip install numpy
+```
+
 ### Apache Flink
 
 Running Flink container

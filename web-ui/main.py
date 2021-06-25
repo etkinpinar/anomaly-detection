@@ -1,28 +1,12 @@
 from flask import Flask, render_template, request
-import socketio
 import os
 
-results = []
-
 app = Flask(__name__)
-sio = socketio.Server()
-
-result_string = "lololo"
 
 
 @app.route('/')
 def post_result():
     return render_template("index.html")
-
-
-@sio.event
-def connect():
-    print("I'm connected!")
-
-
-@sio.event
-def connect_error(data):
-    print("The connection failed!")
 
 
 @app.route('/train', methods=['POST', 'GET'])
@@ -56,6 +40,7 @@ def predict():
 
         stream = os.popen(command)
         output = stream.read()
+        print(output)
         splitted = output.split('<->')
 
         return render_template("index.html",

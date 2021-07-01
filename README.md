@@ -32,7 +32,7 @@ Running Flink container
 
 ```
 cd ../flink
-docker-compose up -d
+docker-compose up --scale taskmanager=2 -d
 ```
 
 ### User-interface

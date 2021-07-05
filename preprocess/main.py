@@ -1,5 +1,4 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
@@ -103,6 +102,8 @@ def box_plot():
 
         if anomaly_cols > 3:
             data.at[i, "anomaly"] = 1
+            
+    data = data.drop(['session-id', 'user-ip'], axis=1)
 
     data.to_csv("data-anomaly.csv", index=False)
 
